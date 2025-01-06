@@ -1,0 +1,36 @@
+int explore_maze(Map& map_ref, int x, int y, int orientation, int idx) {
+    int score = -1;
+
+    if (idx <= 0) {
+        //std::cout << "Max iteration reached" << std::endl;
+    }
+
+    else if (map_ref.getValue(x, y) == 'E') {
+        score = 0;
+        std::cout << "End reached" << std::endl;
+    }
+
+    else {
+        std::vector<bool> neighbors = CheckAround(map_ref, x, y);
+
+        for (int i = 0; i < 4; ++i) {
+            if (neighbors[i]) {
+                std::vector<int> new_pos = Move(x, y, orientation, i);
+
+                int current_score = explore_maze(map_ref, new_pos[0], new_pos[1], new_pos[2], idx - 1) + 1;
+
+                if (current_score >= 0){
+                    if (orientation != i) {
+                        current_score += 1000;
+                    }
+
+                    if (score == -1 || current_score < score) {
+                        score = current_score;
+                    }
+                }
+            }
+        }
+    }
+
+    return score;
+}
